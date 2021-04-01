@@ -1,1 +1,17 @@
-pipeline
+pipeline {
+  agent {
+    label 'dev'
+  }
+  stages {
+    stage ('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+    stage ('Build') {
+      steps {
+        sh "mvn clean install"
+      }
+    }
+  }
+}
