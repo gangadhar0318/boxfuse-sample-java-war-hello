@@ -18,10 +18,10 @@ pipeline {
         deleteDir()
       }
       failure {
-        echo "send mail -s maven job failed reciepients@mail.com"
+        echo "send mail -s mvn job failed reciepients@my.com"
       }
       success {
-        echo "the job is successful"
+        echo "job is successful"
       }
     }
   }
