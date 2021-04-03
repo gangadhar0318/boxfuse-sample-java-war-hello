@@ -1,5 +1,7 @@
 pipeline {
   agent any
+  tools {
+        maven 'Maven363'
   stages {
     stage('Build') {
       steps {
