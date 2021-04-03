@@ -13,16 +13,5 @@ pipeline {
         sh "mvn clean install"
       }
     }
-    post {
-      always {
-        deleteDir()
-      }
-      failure {
-        echo "send mail -s mvn job failed reciepients@my.com"
-      }
-      success {
-        echo "job is successful"
-      }
-    }
   }
 }
