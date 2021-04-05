@@ -3,6 +3,10 @@ pipeline {
   tools {
     maven 'Maven363'
   }
+  environment {
+    target_user= 'ec2-user'
+    target_server= '10.0.0.104'
+  }
   options {
     timeout(10)
     buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '5', numToKeepStr: '5')
@@ -16,11 +20,10 @@ pipeline {
     stage('deploy') {
       steps {
         sshagent(['Deploy_cred']) {
-          sh 'scp -o StrictHostKeyChecking=no target/hello-1.0.war ec2-user@10.0.0.104:/opt'
+          sh "scp -o StrictHostKeyChecking=no target/hello-1.0.war $target_user@$target_server:/root/devops/apache-tomcat-9.0.44/webapps"
         }
       }
     }
-    
   }
   post {
     always{
