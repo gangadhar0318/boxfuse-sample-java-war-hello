@@ -20,6 +20,7 @@ pipeline {
     stage('deploy') {
       steps {
         sshagent(['Deploy_cred']) {
+          sh "scp -o StrictHostKeyChecking=no $target_user@$target_server:/root/devops/apache-tomcat-9.0.44/bin/shutdown.sh"
           sh "scp -o StrictHostKeyChecking=no target/hello-1.0.war $target_user@$target_server:/root/devops/apache-tomcat-9.0.44/webapps"
         }
       }
