@@ -16,7 +16,7 @@ pipeline {
     stage('deploy') {
       steps {
         sshagent(['Deploy_cred']) {
-          sh 'scp -o StrictHostKeyChecking=no target/hello-1.0-.war ec2-user@10.0.0.104:/opt'
+          sh 'scp -o StrictHostKeyChecking=no target/hello-1.0.war ec2-user@10.0.0.104:/opt'
         }
       }
     }
