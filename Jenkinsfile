@@ -3,10 +3,6 @@ pipeline {
   tools {
     maven 'Maven363'
   }
-  environment {
-    target_user= 'ec2-user'
-    target_server= '10.0.0.104'
-  }
   options {
     timeout(10)
     buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '5', numToKeepStr: '5')
@@ -18,10 +14,28 @@ pipeline {
       }
     }
     stage('deploy') {
-      steps {
-        sshagent(['Deploy_cred']) {
-          sh "scp -o StrictHostKeyChecking=no $target_user@$target_server:/root/devops/apache-tomcat-9.0.44/bin/shutdown.sh"
-          sh "scp -o StrictHostKeyChecking=no target/hello-1.0.war $target_user@$target_server:/root/devops/apache-tomcat-9.0.44/webapps"
+      parallel {
+        stage('deploy to app server') {
+          environment {
+           target_user= 'ec2-user'
+           target_server= '10.0.0.104'
+          }
+          steps {
+            sshagent(['Deploy_cred']) {
+            sh "scp -o StrictHostKeyChecking=no target/hello-1.0.war $target_user@$target_server:/root/devops/apache-tomcat-9.0.44/webapps"
+            }
+          }
+        }
+        stage('deploy to dev env') {
+          environment {
+            target_user= 'ec2-user'
+            target_server= '10.0.0.87'
+          }
+          steps {
+            sshagent(['slave1_cred']) {
+            sh "scp -o StrictHostKeyChecking=no target/hello-1.0.war $target_user@$target_server:/opt"
+            }
+          }
         }
       }
     }
